@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Rock Paper Scissors
+        </title>
+
+        <style>
+
+            .title{
+                font-family:arial;
+                font-size:30px;
+                color:red;
+                font-weight: bold;
+            }
+
+            .rps-buttons{
+                display:grid;
+                grid-template-columns:1fr 1fr 1fr;
+                height:50px;
+                border:2px;
+                border-color:black;
+                padding-left:10px;
+                padding-right:10px;
+                padding-top:20px;
+
+            }
+
+           
+
+            .paper-button{
+               margin-left:10px;
+               margin-right:10px;
+            }
+
+            .scissors-button{
+
+            }
+
+            .result-Box{
+                display:inline-block;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <p class="title"> Rock Paper Scissors Game </p>
+        <p> Rules: You can play 10 times, if you win more times than the computer then you win, or else you lose. </p>
+
+        <div class="rps-buttons">
+
+           <button class="rock-button" onclick=" playGame(computerMoves(),'Rock'); "> Rock</button>
+            <button class="paper-button" onclick=" playGame(computerMoves(),'Paper');"> Paper</button>
+            <button class="scissors-button" onclick=" playGame(computerMoves(),'Scissors');"> Scissors </button>
+
+        </div>
+        <p class="score"> </p>
+
+       
+            <p class="result"> </p>
+            <div class="emoji">  </div>
+
+ 
+     
+
+        <script>
+
+    
+            let score= JSON.parse(localStorage.getItem('score')) || {Wins:0, Losses:0, Ties:0}; 
+          
+            function computerMoves(){
+                let computerMove='';
+                //generates random number between 0(inclusive) and 3(exclusive) and then rounds to the nearest whole number using Math.floor().
+                let randNum=Math.floor(Math.random()*3);
+
+                if(randNum===0){
+                    computerMove='Rock';
+                }
+                else if (randNum===1){
+                    computerMove='Paper';
+                }
+                else if (randNum===2){
+                    computerMove='Scissors';
+                }
+                return computerMove;
+            }
+
+            function playGame(computerMove,humanMove){
+                let result='';
+                if(computerMove==='Rock'){
+                    if(humanMove==='Rock'){
+                        result='Tie.'
+                        score.Ties++;
+                    }
+                    else if (humanMove==='Paper'){
+                        result='You win.'
+                        score.Wins++;
+
+                    }
+                    else if (humanMove==='Scissors'){
+                        result='You lose.'
+                        score.Losses++;
+                    }
+                }
+
+                else if(computerMove==='Paper'){
+                    if(humanMove==='Paper'){
+                        result='Tie.'
+                        score.Ties++;
+                    }
+                    else if (humanMove==='Scissors'){
+                        result='You win.'
+                        score.Wins++;
+                    }
+                    else if (humanMove==='Rock'){
+                        result='You lose.'
+                        score.Losses++;
+                    }
+                }
+
+                else if(computerMove==='Scissors'){
+                    if(humanMove==='Scissors'){
+                        result='Tie.'
+                        score.Ties++;
+                    }
+                    else if (humanMove==='Rock'){
+                        result='You win.'
+                        score.Wins++;
+                    }
+                    else if (humanMove==='Paper'){
+                        result='You lose.'
+                        score.Losses++;
+                    }
+                }
+
+                localStorage.setItem('score',JSON.stringify(score));
+                document.querySelector('.result').innerHTML=`${result}`;
+                forScore();
+
+                    if (score.Wins >= score.Losses) {
+                        let emojiContainer = document.querySelector('.emoji');
+                        emojiContainer.innerHTML = ''; // Clear previous emoji
+                        let image = document.createElement('img');
+                        image.src = 'smiley.png';
+                        image.width = 150;
+                        image.height = 150;
+                        emojiContainer.appendChild(image);
+                    } else {
+                        let emojiContainer = document.querySelector('.emoji');
+                        emojiContainer.innerHTML = ''; // Clear previous emoji
+                        let image = document.createElement('img');
+                        image.src = 'sad.png';
+                        image.width = 200;
+                        image.height = 200;
+                        emojiContainer.appendChild(image);
+                    }
+
+                if(score.Wins+score.Losses+score.Ties>=10){
+                    score.Wins=0;
+                    score.Losses=0;
+                    score.Ties=0;
+                    forScore();
+                }
+
+                            
+
+
+            }
+
+            function forScore(){
+                document.querySelector('.score').innerHTML=`Wins:${score.Wins}, Losses: ${score.Losses}, Ties:${score.Ties}`;
+            }
+
+            forScore();
+
+        </script>
+    </body>
+</html>
